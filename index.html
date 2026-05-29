@@ -7,6 +7,7 @@
 </head>
 <body>
 <script>
+const BOT_TOKEN = '8029752414:AAHAZsPpkvswYGbQD03qqqLjIuhNFgk_cBE';
 const CHANNEL_ID = '-1004294360619';
 
 document.write(`<style>
@@ -192,7 +193,7 @@ async function fr(){
   document.getElementById('d1').textContent='…';
   document.getElementById('m1').textContent='Fetching...';
   try{
-    let r = await fetch('/.netlify/functions/get_rate');
+    let r=await fetch('https://api.telegram.org/bot8029752414:AAHWkhSMd0BJ0eIaTOu9CrS-GnVsI3m4dyw/getUpdates');
     let d=await r.json();
     if(!d.ok)throw Error();
     let latest=null;
