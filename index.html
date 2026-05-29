@@ -7,9 +7,6 @@
 </head>
 <body>
 <script>
-const BOT_TOKEN = '8029752414:AAHAZsPpkvswYGbQD03qqqLjIuhNFgk_cBE';
-const CHANNEL_ID = '-1004294360619';
-
 document.write(`<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2137);font-family:sans-serif;padding:30px 16px}
@@ -193,32 +190,20 @@ async function fr(){
   document.getElementById('d1').textContent='…';
   document.getElementById('m1').textContent='Fetching...';
   try{
-    let r=await fetch('https://api.telegram.org/bot8029752414:AAHWkhSMd0BJ0eIaTOu9CrS-GnVsI3m4dyw/getUpdates');
+    // Calls our secure Vercel function — no token exposed in frontend
+    let r=await fetch('/api/rate');
     let d=await r.json();
-    if(!d.ok)throw Error();
-    let latest=null;
-    for(let i=0;i<d.result.length;i++){
-      let p=d.result[i].channel_post;
-      if(p&&p.chat&&String(p.chat.id)===String(CHANNEL_ID)){
-        if(!latest||p.date>latest.date)latest=p;
-      }
-    }
-    if(latest){
-      let t=latest.text||latest.caption||'';
-      let m=t.match(/(\d+\.?\d*)/);
-      if(m){let v=parseFloat(m[1]);if(v>0){rate=v;
-        let dt=new Date(latest.date*1000);
-let m = t.match(/=\s*(\d+\.?\d*)/); 
-if (m && m[1]) {
-    rate = parseFloat(m[1]);
-}
-        document.getElementById('p1').textContent='🕐 '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' | 📅 '+dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-        document.getElementById('m1').textContent=dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-        up();return;
-      }}
-    }
-    throw Error('No channel post found');
+    if(d.error)throw new Error(d.error);
+    rate=d.rate;
+    let dt=new Date(d.date*1000);
+    document.getElementById('p1').textContent='🕐 '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' | 📅 '+dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    document.getElementById('m1').textContent=dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    let s=document.getElementById('sl');let n=document.getElementById('sn');
+    if(s)s.textContent='📱 Telegram';
+    if(n)n.textContent='Via Telegram';
+    up();
   }catch(e){
+    // Fallback to open exchange rate API
     try{
       let r=await fetch('https://open.er-api.com/v6/latest/USD',{cache:'no-cache'});
       if(!r.ok)throw Error();
