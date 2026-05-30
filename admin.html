@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Rate Update</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { min-height: 100vh; background: linear-gradient(135deg, #0a1628, #1a3a5c, #0d2137); display: flex; align-items: center; justify-content: center; font-family: sans-serif; padding: 20px; }
+.card { background: #fff; border-radius: 20px; padding: 36px 32px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+.logo { text-align: center; margin-bottom: 28px; }
+.logo h1 { font-size: 22px; font-weight: 800; color: #1a3a5c; }
+.logo p { font-size: 13px; color: #888; margin-top: 4px; }
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.field input { width: 100%; padding: 14px 16px; font-size: 20px; font-weight: 700; border: 2px solid #ddd; border-radius: 12px; outline: none; color: #1a3a5c; }
+.field input:focus { border-color: #1e4d7a; }
+.btn { width: 100%; padding: 14px; background: linear-gradient(90deg, #0b2b4a, #1e4d7a); color: #fff; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; margin-top: 4px; }
+.btn:hover { opacity: .9; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.msg { margin-top: 16px; padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; display: none; }
+.msg.ok { background: #dcfce7; color: #166534; display: block; }
+.msg.err { background: #fee2e2; color: #991b1b; display: block; }
+.current { background: #f0f7ff; border: 2px solid #b3cff8; border-radius: 12px; padding: 14px 16px; margin-bottom: 24px; text-align: center; }
+.current .cl { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 4px; }
+.current .cv { font-size: 26px; font-weight: 800; color: #1a3a5c; }
+.current .ct { font-size: 12px; color: #aaa; margin-top: 2px; }
+#loginWrap { }
+#adminWrap { display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>🔒 Rate Admin</h1>
+    <p>ZM ↔ ZW Transfers</p>
+  </div>
+
+  <!-- Login -->
+  <div id="loginWrap">
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()" />
+    </div>
+    <button class="btn" onclick="login()">Login</button>
+    <div class="msg err" id="loginErr">Wrong password</div>
+  </div>
+
+  <!-- Admin -->
+  <div id="adminWrap">
+    <div class="current">
+      <div class="cl">Current Rate</div>
+      <div class="cv">1 USD = <span id="currentRate">—</span> ZMW</div>
+      <div class="ct" id="currentTime">Loading...</div>
+    </div>
+    <div class="field">
+      <label>New Rate (ZMW per 1 USD)</label>
+      <input type="number" id="rateInput" placeholder="e.g. 18.70" step="0.01" onkeydown="if(event.key==='Enter')saveRate()" />
+    </div>
+    <button class="btn" id="saveBtn" onclick="saveRate()">💾 Save Rate</button>
+    <div class="msg" id="saveMsg"></div>
+    <div style="text-align:center;margin-top:18px">
+      <a href="index.html" style="font-size:13px;color:#888;text-decoration:none;">← Back to site</a>
+      &nbsp;·&nbsp;
+      <a href="#" onclick="logout()" style="font-size:13px;color:#888;text-decoration:none;">Logout</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://cgpxihpepqoihnleatfa.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncHhpaHBlcHFvaWhubGVhdGZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMDA1MzIsImV4cCI6MjA5NTY3NjUzMn0.mT-gWZUcW9bqQdKGmNg4anzPm-bWI4xRqFObwTMGK3g';
+
+// ⚠️ Change this to your own password
+const PASSWORD = 'zmzwzmzw2026';
+
+function login() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === PASSWORD) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    loadCurrent();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  document.getElementById('loginWrap').style.display = 'block';
+  document.getElementById('adminWrap').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+}
+
+async function loadCurrent() {
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/rates?select=rate,created_at&order=created_at.desc&limit=1`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    const data = await r.json();
+    if (data && data.length > 0) {
+      document.getElementById('currentRate').textContent = parseFloat(data[0].rate).toFixed(2);
+      const dt = new Date(data[0].created_at);
+      document.getElementById('currentTime').textContent = 'Last updated: ' + dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+    } else {
+      document.getElementById('currentRate').textContent = 'None yet';
+      document.getElementById('currentTime').textContent = 'No rate saved yet';
+    }
+  } catch(e) {
+    document.getElementById('currentTime').textContent = 'Could not load current rate';
+  }
+}
+
+async function saveRate() {
+  const val = parseFloat(document.getElementById('rateInput').value);
+  const msg = document.getElementById('saveMsg');
+  const btn = document.getElementById('saveBtn');
+
+  msg.className = 'msg';
+  msg.style.display = 'none';
+
+  if (!val || val <= 0) {
+    msg.textContent = 'Please enter a valid rate';
+    msg.className = 'msg err';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rates`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ rate: val, raw_text: '1usd=' + val + 'zmw' })
+    });
+
+    if (!r.ok) throw new Error('Supabase error');
+
+    msg.textContent = '✅ Rate updated to ' + val.toFixed(2) + ' ZMW!';
+    msg.className = 'msg ok';
+    document.getElementById('rateInput').value = '';
+    loadCurrent();
+  } catch(e) {
+    msg.textContent = '❌ Failed to save. Check connection.';
+    msg.className = 'msg err';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '💾 Save Rate';
+}
+
+// Auto-login if session exists
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('adminWrap').style.display = 'block';
+  loadCurrent();
+}
+</script>
+</body>
+</html>

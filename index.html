@@ -17,7 +17,6 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 .rb{background:#fff;border-radius:16px;padding:14px 20px;box-shadow:0 8px 30px rgba(0,0,0,.15);margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .rb .l{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#888}
 .rb .v{font-size:26px;font-weight:800;color:#1a3a5c}
-.rb .v s{color:#2563eb}
 .rb .m{font-size:11px;color:#aaa;text-align:right}
 .pd{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:4px;animation:pl 2s infinite}
 @keyframes pl{0%,100%{opacity:1}50%{opacity:.3}}
@@ -71,7 +70,6 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 .rx .ri{font-size:28px;margin-bottom:4px}
 .rx .rl{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#555}
 .rx .ra{font-size:32px;font-weight:800;color:#1a3a5c;margin:4px 0}
-.rx .ra s{color:#2563eb}
 .rx .rd{font-size:13px;color:#666}
 .rx .rk{font-size:12px;color:#888;margin-top:6px;padding-top:6px;border-top:1px dashed #b3cff8}
 .rn{font-size:12px;color:#999;text-align:center;margin-top:10px}
@@ -179,15 +177,15 @@ function up(source) {
   document.getElementById('d1').textContent = rate.toFixed(2);
   document.getElementById('p2').textContent = '1 USD = ' + rate.toFixed(2) + ' ZMW';
   document.getElementById('rn1').textContent = rate.toFixed(2);
-  document.getElementById('sl').textContent = source === 'supabase' ? '📱 Telegram' : 'Live Rate';
-  document.getElementById('sn').textContent = source === 'supabase' ? 'Via Telegram' : 'Via API';
+  document.getElementById('sl').textContent = source === 'supabase' ? '✅ Our Rate' : 'Market Rate';
+  document.getElementById('sn').textContent = source === 'supabase' ? 'Updated by admin' : 'Via open API';
 }
 
 async function fr() {
   document.getElementById('d1').textContent = '…';
   document.getElementById('m1').textContent = 'Fetching...';
 
-  // Step 1: Try Supabase (rate posted via Telegram bot)
+  // Step 1: Try Supabase (rate set via admin page)
   try {
     const r = await fetch(
       `${SUPABASE_URL}/rest/v1/rates?select=rate,created_at&order=created_at.desc&limit=1`,
@@ -202,7 +200,7 @@ async function fr() {
     document.getElementById('m1').textContent = dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
     up('supabase');
     return;
-  } catch (e) {}
+  } catch(e) {}
 
   // Step 2: Fallback to public exchange rate API
   try {
@@ -218,7 +216,7 @@ async function fr() {
       document.getElementById('m1').textContent = dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
     }
     up('api');
-  } catch (e) {
+  } catch(e) {
     document.getElementById('m1').textContent = 'Rate unavailable';
     document.getElementById('d1').textContent = '—';
   }
