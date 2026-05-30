@@ -7,6 +7,9 @@
 </head>
 <body>
 <script>
+const SUPABASE_URL = 'https://cgpxihpepqoihnleatfa.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncHhpaHBlcHFvaWhubGVhdGZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMDA1MzIsImV4cCI6MjA5NTY3NjUzMn0.mT-gWZUcW9bqQdKGmNg4anzPm-bWI4xRqFObwTMGK3g';
+
 document.write(`<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2137);font-family:sans-serif;padding:30px 16px}
@@ -84,12 +87,10 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 @media(max-width:480px){.po h1{font-size:24px}.rb .v{font-size:22px}.rx .ra{font-size:26px}.tr button{font-size:12px;padding:10px 6px}}
 </style>
 <div class="wrap">
-
 <div class="rb">
 <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span class="pd"></span><span class="l" id="sl">Live Rate</span></div><div class="v">1 USD = <span id="d1">—</span> ZMW</div></div>
 <div style="text-align:right"><div class="m" id="m1">Loading...</div><button class="br" onclick="fr()">↻ Refresh</button></div>
 </div>
-
 <div class="po">
 <div class="pt">
 <div class="fg"><span class="f1">🇿🇼 ZIMBABWE</span><span class="f2">🇿🇲 ZAMBIA</span></div>
@@ -117,7 +118,6 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 <div class="tg">Fast. Safe. Reliable.</div>
 </div>
 </div>
-
 <div class="cw">
 <div class="ch"><h2>🧮 Transfer Calculator</h2><p>Know exactly what arrives</p></div>
 <div class="cb">
@@ -160,7 +160,6 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 <div class="rn">Rate: <strong>1 USD = <span id="rn1">—</span> ZMW</strong> &nbsp;·&nbsp; <span id="sn">Loading...</span></div>
 </div>
 </div>
-
 <div class="lw">
 <div class="lh"><h3>📄 Terms & Privacy</h3></div>
 <div class="lb">
@@ -174,50 +173,54 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 </div>`);
 
 let rate = 20;
-let smA='s',smB='s';
+let smA = 's', smB = 's';
 
-function up(){
-  document.getElementById('d1').textContent=rate.toFixed(2);
-  document.getElementById('p2').textContent='1 USD = '+rate.toFixed(2)+' ZMW';
-  document.getElementById('rn1').textContent=rate.toFixed(2);
-  let s=document.getElementById('sl');
-  let n=document.getElementById('sn');
-  if(s)s.textContent='📱 Telegram';
-  if(n)n.textContent='Via Telegram';
+function up(source) {
+  document.getElementById('d1').textContent = rate.toFixed(2);
+  document.getElementById('p2').textContent = '1 USD = ' + rate.toFixed(2) + ' ZMW';
+  document.getElementById('rn1').textContent = rate.toFixed(2);
+  document.getElementById('sl').textContent = source === 'supabase' ? '📱 Telegram' : 'Live Rate';
+  document.getElementById('sn').textContent = source === 'supabase' ? 'Via Telegram' : 'Via API';
 }
 
-async function fr(){
-  document.getElementById('d1').textContent='…';
-  document.getElementById('m1').textContent='Fetching...';
-  try{
-    // Calls our secure Vercel function — no token exposed in frontend
-    let r=await fetch('/api/rate');
-    let d=await r.json();
-    if(d.error)throw new Error(d.error);
-    rate=d.rate;
-    let dt=new Date(d.date*1000);
-    document.getElementById('p1').textContent='🕐 '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' | 📅 '+dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-    document.getElementById('m1').textContent=dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    let s=document.getElementById('sl');let n=document.getElementById('sn');
-    if(s)s.textContent='📱 Telegram';
-    if(n)n.textContent='Via Telegram';
-    up();
-  }catch(e){
-    // Fallback to open exchange rate API
-    try{
-      let r=await fetch('https://open.er-api.com/v6/latest/USD',{cache:'no-cache'});
-      if(!r.ok)throw Error();
-      let d=await r.json();
-      if(d.result!=='success'||!d.rates.ZMW)throw Error();
-      rate=d.rates.ZMW;
-      let u=d.time_last_update_utc||'';
-      if(u){let dt=new Date(u);document.getElementById('m1').textContent=dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});document.getElementById('p1').textContent='🕐 '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' | 📅 '+dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
-      let s=document.getElementById('sl');let n=document.getElementById('sn');
-      if(s)s.textContent='Live Rate';if(n)n.textContent='Via API';
-      document.getElementById('d1').textContent=rate.toFixed(2);
-      document.getElementById('p2').textContent='1 USD = '+rate.toFixed(2)+' ZMW';
-      document.getElementById('rn1').textContent=rate.toFixed(2);
-    }catch(e2){}
+async function fr() {
+  document.getElementById('d1').textContent = '…';
+  document.getElementById('m1').textContent = 'Fetching...';
+
+  // Step 1: Try Supabase (rate posted via Telegram bot)
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/rates?select=rate,created_at&order=created_at.desc&limit=1`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    if (!r.ok) throw new Error('Supabase error');
+    const data = await r.json();
+    if (!data || data.length === 0) throw new Error('No rate yet');
+    rate = data[0].rate;
+    const dt = new Date(data[0].created_at);
+    document.getElementById('p1').textContent = '🕐 ' + dt.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) + ' | 📅 ' + dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+    document.getElementById('m1').textContent = dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+    up('supabase');
+    return;
+  } catch (e) {}
+
+  // Step 2: Fallback to public exchange rate API
+  try {
+    const r = await fetch('https://open.er-api.com/v6/latest/USD', {cache: 'no-cache'});
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    if (d.result !== 'success' || !d.rates.ZMW) throw new Error();
+    rate = d.rates.ZMW;
+    const u = d.time_last_update_utc || '';
+    if (u) {
+      const dt = new Date(u);
+      document.getElementById('p1').textContent = '🕐 ' + dt.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) + ' | 📅 ' + dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+      document.getElementById('m1').textContent = dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+    }
+    up('api');
+  } catch (e) {
+    document.getElementById('m1').textContent = 'Rate unavailable';
+    document.getElementById('d1').textContent = '—';
   }
 }
 
