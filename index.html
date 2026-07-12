@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Fast Reliable Transfers | Zambia ↔ Zimbabwe</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <body>
 <script>
@@ -61,9 +62,10 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 .ia{margin-bottom:16px}
 .ia .h{font-size:12px;color:#777;margin-bottom:6px;text-align:center}
 .ir{display:flex;gap:10px}
-.ir .ig{flex:1;position:relative}
-.ir .ig .sy{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;font-weight:700;color:#555}
-.cb input[type=number]{width:100%;padding:14px 14px 14px 36px;font-size:22px;font-weight:700;border:2px solid #ddd;border-radius:12px;outline:none}
+.ir .ig{flex:1;display:flex;align-items:center;border:2px solid #ddd;border-radius:12px;background:#fff;transition:border-color .15s}
+.ir .ig:focus-within{border-color:#1e4d7a}
+.ir .ig .sy{flex:0 0 auto;padding:14px 0 14px 14px;font-size:18px;font-weight:700;color:#555;white-space:nowrap}
+.cb input[type=number]{flex:1;min-width:0;width:100%;padding:14px 14px 14px 6px;font-size:22px;font-weight:700;border:none;border-radius:12px;outline:none;background:transparent}
 .cb input[type=number]:focus{border-color:#1e4d7a}
 .rx{background:linear-gradient(135deg,#e8f0fe,#f0f7ff);border:2px solid #b3cff8;border-radius:14px;padding:18px;text-align:center}
 .rx.hide{display:none}
@@ -111,7 +113,8 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 </div>
 </div>
 <div class="pf">
-<a class="wa" href="https://wa.me/260574821672" target="_blank">💬 Contact Us on WhatsApp &nbsp;+260 574 821 672</a>
+<a class="wa" href="https://wa.me/260762254613" target="_blank">💬 WhatsApp &nbsp;+260 762 254 613 (Kevin)</a>
+<a class="wa" href="https://wa.me/260574821672" target="_blank">💬 WhatsApp &nbsp;+260 574 821 672 (Munashe)</a>
 <div class="dl"></div>
 <div class="tg">Fast. Safe. Reliable.</div>
 </div>
@@ -170,7 +173,7 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 </div>
 </div>`);
 
-let rate = 20;
+var rate = 20;
 let smA = 's', smB = 's';
 
 function up(source) {
@@ -230,5 +233,6 @@ function cb(){let R=rate;let a=document.getElementById('ra2');let l=document.get
 ['n1','n2','n3','n4'].forEach(id=>{document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter'){if(id==='n1'||id==='n2')ca();else cb();}});});
 fr();
 </script>
+<script src="whatsapp-button.js"></script>
 </body>
 </html>
