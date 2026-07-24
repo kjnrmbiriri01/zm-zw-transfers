@@ -1,0 +1,31 @@
+{
+  "name": "ZM \u2194 ZW Money Transfers",
+  "short_name": "ZM-ZW Transfers",
+  "description": "Fast, reliable money transfers between Zambia and Zimbabwe",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b2b4a",
+  "theme_color": "#0b2b4a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

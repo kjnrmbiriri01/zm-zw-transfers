@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Fast Reliable Transfers | Zambia ↔ Zimbabwe</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon-192.png" type="image/png" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="theme-color" content="#0b2b4a" />
 </head>
 <body>
 <script>
@@ -119,7 +123,7 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 </div>
 <div class="hw">
 <h3>📲 How To Send From Zimbabwe (EcoCash)</h3>
-<div class="hs"><div class="hn">1</div><div class="hc"><b>Dial the USSD code</b><span>Enter <code>*153*3*1*004148*amount#</code>(Cryptax Solutions) on EcoCash to initiate the transfer.</span></div></div>
+<div class="hs"><div class="hn">1</div><div class="hc"><b>Dial the USSD code</b><span>Enter <code>*153*3*1*004148*amount#</code> on EcoCash to initiate the transfer.</span></div></div>
 <div class="hs"><div class="hn">2</div><div class="hc"><b>Send proof of payment</b><span>WhatsApp us a screenshot of the transaction showing the sender's name, amount, and Transaction ID.</span></div></div>
 <div class="hs"><div class="hn">3</div><div class="hc"><b>Wait for confirmation</b><span>We verify the transaction and confirm receipt with you before releasing funds.</span></div></div>
 <div class="hs"><div class="hn">4</div><div class="hc"><b>Receive your funds</b><span>Share your MTN or Airtel Mobile Money number, or arrange a cash pickup in Zambia.</span></div></div>
@@ -253,5 +257,12 @@ function cb(){let R=rate;let a=document.getElementById('ra2');let l=document.get
 fr();
 </script>
 <script src="whatsapp-button.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch((err) => console.log('SW registration failed:', err));
+    });
+}
+</script>
 </body>
 </html>
