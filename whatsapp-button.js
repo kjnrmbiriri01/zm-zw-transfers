@@ -6,10 +6,10 @@
         munashe:  { name: "Munashe",  phone: "260574821672" }
     };
 
-    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=30), $3 flat (<=70), else 5%
+    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=30), $3 flat (31-60), else 5%
     function calcFee(usdAmount) {
         if (usdAmount <= 30) return 2;
-        if (usdAmount <= 70) return 3;
+        if (usdAmount <= 60) return 3;
         return usdAmount * 0.05;
     }
 
@@ -57,7 +57,7 @@
             if (t <= 30) { principal = t; fee = 2; }
             else {
                 t = (receiveVal / R) + 3;
-                if (t <= 70) { principal = t; fee = 3; }
+                if (t <= 60) { principal = t; fee = 3; }
                 else { principal = receiveVal / (0.95 * R); fee = principal * 0.05; }
             }
             return { fee, send: principal, sendCurrency: 'USD', receiveCurrency: 'ZMW' };
@@ -69,7 +69,7 @@
             if (t <= 30) { principalUsd = t; fee = 2; }
             else {
                 t = receiveVal + 3;
-                if (t <= 70) { principalUsd = t; fee = 3; }
+                if (t <= 60) { principalUsd = t; fee = 3; }
                 else { principalUsd = receiveVal / 0.95; fee = principalUsd - receiveVal; }
             }
             return { fee, send: principalUsd * R2, sendCurrency: 'ZMW', receiveCurrency: 'USD' };
