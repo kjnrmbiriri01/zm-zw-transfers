@@ -1,9 +1,7 @@
 // PWA Install Banner - soft, dismissible, remembers "no thanks" for a few weeks
 (function() {
-    const DISMISS_KEY = 'pwaInstallDismissedAt';
-    const DISMISS_DAYS = 1;          // "cancel" -> ask again after 24 hours
     const INSTALLED_KEY = 'pwaInstalledOrAcceptedAt';
-    const INSTALLED_DAYS = 14;       // "install" clicked / actually installed -> stay quiet for 1-2 weeks
+    const INSTALLED_DAYS = 7;        // "install" clicked / actually installed -> stay quiet for a week (covers possible uninstall)
     const SHOW_DELAY_MS = 4000; // wait a bit before interrupting a fresh visitor
 
     let deferredPrompt = null;
@@ -24,7 +22,7 @@
     }
 
     function isSuppressed() {
-        return daysSince(DISMISS_KEY) < DISMISS_DAYS || daysSince(INSTALLED_KEY) < INSTALLED_DAYS;
+        return daysSince(INSTALLED_KEY) < INSTALLED_DAYS;
     }
 
     function isIOS() {
@@ -176,7 +174,6 @@
     }
 
     function dismiss() {
-        try { localStorage.setItem(DISMISS_KEY, Date.now().toString()); } catch (e) {}
         hideBanner();
     }
 
