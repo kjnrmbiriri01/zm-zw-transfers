@@ -1,7 +1,9 @@
 // PWA Install Banner - soft, dismissible, remembers "no thanks" for a few weeks
 (function() {
     const DISMISS_KEY = 'pwaInstallDismissedAt';
-    const DISMISS_DAYS = 21;   // how long to stay quiet after someone dismisses
+    const DISMISS_DAYS = 1;          // "cancel" -> ask again after 24 hours
+    const INSTALLED_KEY = 'pwaInstalledOrAcceptedAt';
+    const INSTALLED_DAYS = 14;       // "install" clicked / actually installed -> stay quiet for 1-2 weeks
     const SHOW_DELAY_MS = 4000; // wait a bit before interrupting a fresh visitor
 
     let deferredPrompt = null;
@@ -11,15 +13,18 @@
         return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     }
 
-    function wasDismissedRecently() {
+    function daysSince(key) {
         try {
-            const v = localStorage.getItem(DISMISS_KEY);
-            if (!v) return false;
-            const days = (Date.now() - parseInt(v, 10)) / (1000 * 60 * 60 * 24);
-            return days < DISMISS_DAYS;
+            const v = localStorage.getItem(key);
+            if (!v) return Infinity;
+            return (Date.now() - parseInt(v, 10)) / (1000 * 60 * 60 * 24);
         } catch (e) {
-            return false; // if storage is blocked, just don't block the banner
+            return Infinity; // if storage is blocked, just don't block the banner
         }
+    }
+
+    function isSuppressed() {
+        return daysSince(DISMISS_KEY) < DISMISS_DAYS || daysSince(INSTALLED_KEY) < INSTALLED_DAYS;
     }
 
     function isIOS() {
@@ -123,7 +128,7 @@
     }
 
     function showBanner(kind) {
-        if (isStandalone() || wasDismissedRecently() || bannerEl) return;
+        if (isStandalone() || isSuppressed() || bannerEl) return;
 
         injectStyles();
 
@@ -161,6 +166,7 @@
                 const choice = await deferredPrompt.userChoice;
                 deferredPrompt = null;
                 if (choice && choice.outcome === 'accepted') {
+                    try { localStorage.setItem(INSTALLED_KEY, Date.now().toString()); } catch (e) {}
                     hideBanner();
                 } else {
                     dismiss();
@@ -187,17 +193,17 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        if (isStandalone() || wasDismissedRecently()) return;
+        if (isStandalone() || isSuppressed()) return;
         setTimeout(() => showBanner('chrome'), SHOW_DELAY_MS);
     });
 
     window.addEventListener('appinstalled', () => {
-        try { localStorage.setItem(DISMISS_KEY, Date.now().toString()); } catch (e) {}
+        try { localStorage.setItem(INSTALLED_KEY, Date.now().toString()); } catch (e) {}
         hideBanner();
     });
 
     function init() {
-        if (isStandalone() || wasDismissedRecently()) return;
+        if (isStandalone() || isSuppressed()) return;
         // iOS Safari has no beforeinstallprompt event at all, so show manual instructions ourselves
         if (isIOS()) {
             setTimeout(() => showBanner('ios'), SHOW_DELAY_MS);
