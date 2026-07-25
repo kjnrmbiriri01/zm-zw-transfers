@@ -3,6 +3,7 @@ const APP_SHELL = [
   './',
   './index.html',
   './whatsapp-button.js',
+  './install-prompt.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
