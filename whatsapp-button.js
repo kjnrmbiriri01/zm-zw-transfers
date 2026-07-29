@@ -33,6 +33,7 @@
     let selectedAgent = 'kevin';
     let direction = 'a'; // 'a' = Zimbabwe -> Zambia (send USD, receive ZMW), 'b' = Zambia -> Zimbabwe (send ZMW, receive USD)
     let lastEdited = 'send'; // which field the client typed in last, so we know which to recompute
+    let enquiryMode = false; // true when the client entered 0, meaning "I just want to ask about how it works"
 
     function computeFromSend(sendVal) {
         const R = getRate();
@@ -94,6 +95,10 @@
         const sendCur = direction === 'a' ? 'USD' : 'ZMW';
         const receiveCur = direction === 'a' ? 'ZMW' : 'USD';
 
+        if (enquiryMode) {
+            return `Hi ${agent.name}, I'd like to enquire about how the money transfer service works.`;
+        }
+
         if (!sendVal || !receiveVal) {
             return `Hi ${agent.name}, I'd like to send money from ${dirLabel}. Can you help me with the rate and fees?`;
         }
@@ -105,16 +110,25 @@
         const sendInput = document.getElementById('wsp-send-amt');
         const receiveInput = document.getElementById('wsp-receive-amt');
         const feeNote = document.getElementById('wsp-fee-note');
+        const ENQUIRY_NOTE = "💬 We'll send a general enquiry message instead of an amount.";
 
         if (lastEdited === 'send') {
-            const v = parseFloat(sendInput.value);
-            if (!v || v <= 0) { receiveInput.value = ''; feeNote.textContent = ''; return; }
+            const raw = sendInput.value;
+            if (raw === '') { receiveInput.value = ''; feeNote.textContent = ''; enquiryMode = false; return; }
+            const v = parseFloat(raw);
+            if (v === 0) { receiveInput.value = ''; feeNote.textContent = ENQUIRY_NOTE; enquiryMode = true; return; }
+            enquiryMode = false;
+            if (!v || v < 0) { receiveInput.value = ''; feeNote.textContent = ''; return; }
             const r = computeFromSend(v);
             receiveInput.value = fmt(r.receive);
             feeNote.textContent = `Fee: ${fmt(r.fee)} ${r.sendCurrency}`;
         } else {
-            const v = parseFloat(receiveInput.value);
-            if (!v || v <= 0) { sendInput.value = ''; feeNote.textContent = ''; return; }
+            const raw = receiveInput.value;
+            if (raw === '') { sendInput.value = ''; feeNote.textContent = ''; enquiryMode = false; return; }
+            const v = parseFloat(raw);
+            if (v === 0) { sendInput.value = ''; feeNote.textContent = ENQUIRY_NOTE; enquiryMode = true; return; }
+            enquiryMode = false;
+            if (!v || v < 0) { sendInput.value = ''; feeNote.textContent = ''; return; }
             const r = computeFromReceive(v);
             sendInput.value = fmt(r.send);
             feeNote.textContent = `Fee: ${fmt(r.fee)} ${r.sendCurrency}`;
@@ -153,6 +167,7 @@
         document.getElementById('wsp-send-amt').value = '';
         document.getElementById('wsp-receive-amt').value = '';
         document.getElementById('wsp-fee-note').textContent = '';
+        enquiryMode = false;
     }
 
     function createFloatingButton() {
@@ -185,6 +200,8 @@
                     <button id="wsp-dir-a" class="wsp-toggle wsp-active">Zimbabwe → Zambia</button>
                     <button id="wsp-dir-b" class="wsp-toggle">Zambia → Zimbabwe</button>
                 </div>
+
+                <div class="wsp-tip">💡 Put <strong>0</strong> if you'd just like to enquire about how everything works.</div>
 
                 <label id="wsp-send-label">Sending from Zimbabwe</label>
                 <div class="wsp-ir"><div class="wsp-ig"><span class="wsp-sy" id="wsp-send-sym">$</span><input type="number" id="wsp-send-amt" placeholder="0.00" /></div></div>
@@ -348,6 +365,16 @@
             }
             .wsp-ig:focus-within {
                 border-color: #25D366;
+            }
+            .wsp-tip {
+                font-size: 0.78rem;
+                color: #555;
+                background: #f0faf4;
+                border: 1px solid #d5efe0;
+                border-radius: 8px;
+                padding: 8px 10px;
+                margin-bottom: 14px;
+                line-height: 1.4;
             }
             .wsp-fee-note {
                 font-size: 0.8rem;
