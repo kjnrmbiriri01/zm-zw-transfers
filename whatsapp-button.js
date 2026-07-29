@@ -6,9 +6,12 @@
         munashe:  { name: "Munashe",  phone: "260574821672" }
     };
 
-    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=30), $3 flat (31-60), else 5%
+    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=32), $3 flat (34-60), else 5%
+    // Special cases: $33 is a flat $2.50, $105 is a flat $5 promo (overrides the normal 5% tiers)
     function calcFee(usdAmount) {
-        if (usdAmount <= 30) return 2;
+        if (usdAmount === 33) return 2.5;
+        if (usdAmount === 105) return 5;
+        if (usdAmount <= 32) return 2;
         if (usdAmount <= 60) return 3;
         return usdAmount * 0.05;
     }
@@ -54,7 +57,7 @@
             // Client wants recipient to get receiveVal ZMW in Zambia -> figure out USD to send from Zimbabwe
             let principal, fee;
             let t = (receiveVal / R) + 2;
-            if (t <= 30) { principal = t; fee = 2; }
+            if (t <= 32) { principal = t; fee = 2; }
             else {
                 t = (receiveVal / R) + 3;
                 if (t <= 60) { principal = t; fee = 3; }
@@ -66,7 +69,7 @@
             const R2 = getRate();
             let principalUsd, fee;
             let t = receiveVal + 2;
-            if (t <= 30) { principalUsd = t; fee = 2; }
+            if (t <= 32) { principalUsd = t; fee = 2; }
             else {
                 t = receiveVal + 3;
                 if (t <= 60) { principalUsd = t; fee = 3; }
