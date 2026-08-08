@@ -6,13 +6,14 @@
         munashe:  { name: "Munashe",  phone: "260574821672" }
     };
 
-    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=32), $3 flat (34-60), else 5%
-    // Special cases: $33 is a flat $2.50, $105 is a flat $5 promo (overrides the normal 5% tiers)
+    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=32), $3 flat (34-63), else 5%
+    // Special cases: $33 is a flat $2.50; any exact multiple of $105 (105, 210, 315...) gets a
+    // discounted flat fee of amount/21 (i.e. $5 per $105), overriding the normal 5% tier.
     function calcFee(usdAmount) {
         if (usdAmount === 33) return 2.5;
-        if (usdAmount === 105) return 5;
+        if (usdAmount > 0 && usdAmount % 105 === 0) return usdAmount / 21;
         if (usdAmount <= 32) return 2;
-        if (usdAmount <= 60) return 3;
+        if (usdAmount <= 63) return 3;
         return usdAmount * 0.05;
     }
 
@@ -61,7 +62,7 @@
             if (t <= 32) { principal = t; fee = 2; }
             else {
                 t = (receiveVal / R) + 3;
-                if (t <= 60) { principal = t; fee = 3; }
+                if (t <= 63) { principal = t; fee = 3; }
                 else { principal = receiveVal / (0.95 * R); fee = principal * 0.05; }
             }
             return { fee, send: principal, sendCurrency: 'USD', receiveCurrency: 'ZMW' };
@@ -73,7 +74,7 @@
             if (t <= 32) { principalUsd = t; fee = 2; }
             else {
                 t = receiveVal + 3;
-                if (t <= 60) { principalUsd = t; fee = 3; }
+                if (t <= 63) { principalUsd = t; fee = 3; }
                 else { principalUsd = receiveVal / 0.95; fee = principalUsd - receiveVal; }
             }
             return { fee, send: principalUsd * R2, sendCurrency: 'ZMW', receiveCurrency: 'USD' };
