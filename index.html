@@ -190,6 +190,7 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 <p><strong>📞 Third-party contact.</strong> WhatsApp number is for the transfer service.</p>
 </div>
 <div class="lf">Last updated — May 2026 &nbsp;·&nbsp; <a href="/admin.html" style="color:#bbb;text-decoration:none;font-size:11px;">⚙ Admin</a></div>
+<div class="lf">Made by 3Mkay_Derado</div>
 </div>
 </div>`);
 
@@ -208,7 +209,7 @@ async function fr() {
   document.getElementById('d1').textContent = '…';
   document.getElementById('m1').textContent = 'Fetching...';
 
-  // Step 1: Try Supabase (rate set via admin page)
+  // Step 1: Supabase (rate set via admin page)
   try {
     const r = await fetch(
       `${SUPABASE_URL}/rest/v1/rates?select=rate,created_at&order=created_at.desc&limit=1`,
