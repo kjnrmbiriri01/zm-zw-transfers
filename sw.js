@@ -1,7 +1,5 @@
-const CACHE_NAME = 'zm-zw-transfers-v1';
+const CACHE_NAME = 'zm-zw-transfers-v2';
 const APP_SHELL = [
-  './',
-  './index.html',
   './whatsapp-button.js',
   './install-prompt.js',
   './manifest.json',
@@ -11,7 +9,9 @@ const APP_SHELL = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .catch(() => {}) // never let a caching hiccup block install
   );
   self.skipWaiting();
 });
@@ -25,21 +25,31 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Network-first for same-origin requests (so rates/logic stay fresh),
-// falling back to the cached app shell when offline.
+// IMPORTANT: never intercept the page's own navigation request (loading index.html itself).
+// iOS Safari can hang on service-worker-intercepted navigations, and the live exchange
+// rate needs a fresh network call every time anyway - so just let the browser load it normally.
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) {
-    return; // let cross-origin requests (e.g. live rate API, flag images) pass through untouched
+
+  if (req.mode === 'navigate' || req.destination === 'document') {
+    return; // let the browser handle the page load itself, untouched
   }
 
+  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) {
+    return; // let cross-origin requests (rate API, flag images, CDN scripts) pass through untouched
+  }
+
+  // Static assets only: try cache first for speed, fall back to network, and refresh the cache.
   event.respondWith(
-    fetch(req)
-      .then((res) => {
-        const resClone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-        return res;
-      })
-      .catch(() => caches.match(req).then((cached) => cached || caches.match('./index.html')))
+    caches.match(req).then((cached) => {
+      const networkFetch = fetch(req)
+        .then((res) => {
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+          return res;
+        })
+        .catch(() => cached);
+      return cached || networkFetch;
+    })
   );
 });
