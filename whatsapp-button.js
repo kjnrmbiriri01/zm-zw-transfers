@@ -3,7 +3,7 @@
     // Agents clients can message
     const agents = {
         kevin:    { name: "Kevin",    phone: "260762254613" },
-        munashe:  { name: "Munashe",  phone: "2605748216720" }
+        munashe:  { name: "Munashe",  phone: "260574821672" }
     };
 
     // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=32), $3 flat (34-63), else 5%
