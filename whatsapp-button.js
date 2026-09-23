@@ -6,12 +6,15 @@
         munashe:  { name: "Munashe",  phone: "260574821672" }
     };
 
-    // Fee tiers - mirrors the main calculator (index.html): $2 flat (<=32), $3 flat (34-63), else 5%
+    // Fee tiers - mirrors the main calculator (index.html): $1 flat (<=11), $1.50 flat (<=12),
+    // $2 flat (<=32), $3 flat (34-63), else 5%.
     // Special cases: $33 is a flat $2.50; any exact multiple of $105 (105, 210, 315...) gets a
     // discounted flat fee of amount/21 (i.e. $5 per $105), overriding the normal 5% tier.
     function calcFee(usdAmount) {
         if (usdAmount === 33) return 2.5;
         if (usdAmount > 0 && usdAmount % 105 === 0) return usdAmount / 21;
+        if (usdAmount <= 11) return 1;
+        if (usdAmount <= 12) return 1.5;
         if (usdAmount <= 32) return 2;
         if (usdAmount <= 63) return 3;
         return usdAmount * 0.05;
@@ -58,24 +61,33 @@
         if (direction === 'a') {
             // Client wants recipient to get receiveVal ZMW in Zambia -> figure out USD to send from Zimbabwe
             let principal, fee;
-            let t = (receiveVal / R) + 2;
-            if (t <= 32) { principal = t; fee = 2; }
+            const n = receiveVal / R;
+            if (n <= 10) { principal = n + 1; fee = 1; }
+            else if (n <= 10.5) { principal = n + 1.5; fee = 1.5; }
             else {
-                t = (receiveVal / R) + 3;
-                if (t <= 63) { principal = t; fee = 3; }
-                else { principal = receiveVal / (0.95 * R); fee = principal * 0.05; }
+                let t = n + 2;
+                if (t <= 32) { principal = t; fee = 2; }
+                else {
+                    t = n + 3;
+                    if (t <= 63) { principal = t; fee = 3; }
+                    else { principal = n / 0.95; fee = principal * 0.05; }
+                }
             }
             return { fee, send: principal, sendCurrency: 'USD', receiveCurrency: 'ZMW' };
         } else {
             // Client wants recipient to get receiveVal USD in Zimbabwe -> figure out ZMW to send from Zambia
             const R2 = getRate();
             let principalUsd, fee;
-            let t = receiveVal + 2;
-            if (t <= 32) { principalUsd = t; fee = 2; }
+            if (receiveVal <= 10) { principalUsd = receiveVal + 1; fee = 1; }
+            else if (receiveVal <= 10.5) { principalUsd = receiveVal + 1.5; fee = 1.5; }
             else {
-                t = receiveVal + 3;
-                if (t <= 63) { principalUsd = t; fee = 3; }
-                else { principalUsd = receiveVal / 0.95; fee = principalUsd - receiveVal; }
+                let t = receiveVal + 2;
+                if (t <= 32) { principalUsd = t; fee = 2; }
+                else {
+                    t = receiveVal + 3;
+                    if (t <= 63) { principalUsd = t; fee = 3; }
+                    else { principalUsd = receiveVal / 0.95; fee = principalUsd - receiveVal; }
+                }
             }
             return { fee, send: principalUsd * R2, sendCurrency: 'ZMW', receiveCurrency: 'USD' };
         }
