@@ -10,6 +10,7 @@
     function mark() { try { localStorage.setItem(KEY, Date.now().toString()); } catch (e) {} }
     function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream; }
     function $(id) { return document.getElementById(id); }
+    function all(q) { return Array.prototype.slice.call(document.querySelectorAll(q)); }
     function slides() { return Array.prototype.filter.call(document.querySelectorAll('.sl2-s'), function (s) { return !s.classList.contains('off'); }); }
 
     function render() {
@@ -28,13 +29,15 @@
 
     function offer(kind) {
         var s = $('ins'); if (!s || standalone() || suppressed()) return;
-        $('ins-t').textContent = kind === 'ios' ? 'Tap Share, then Add to Home Screen' : 'Install for quick, one-tap access';
-        $('ins-b').style.display = kind === 'chrome' ? '' : 'none';
+        all('.ins-t').forEach(function (e) { e.textContent = kind === 'ios' ? 'Tap Share, then Add to Home Screen' : 'Install for quick, one-tap access'; });
+        all('.ins-b').forEach(function (e) { e.style.display = kind === 'chrome' ? '' : 'none'; });
         s.classList.remove('off');
+        all('.ibn').forEach(function (e) { e.classList.remove('off'); });
         render(); start();
     }
     function remove() {
         var s = $('ins'); if (s) s.classList.add('off');
+        all('.ibn').forEach(function (e) { e.classList.add('off'); });
         stop(); idx = 0; render();
     }
 
@@ -43,15 +46,14 @@
 
     function init() {
         render();
-        var b = $('ins-b');
-        if (b) b.addEventListener('click', function () {
+        all('.ins-b').forEach(function (b) { b.addEventListener('click', function () {
             if (!deferredPrompt) return remove();
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(function (c) {
                 deferredPrompt = null;
                 if (c && c.outcome === 'accepted') { mark(); remove(); }
             });
-        });
+        }); });
         var r = $('rs');
         if (r) { r.addEventListener('touchstart', stop, { passive: true }); r.addEventListener('touchend', start, { passive: true }); }
         if (isIOS()) offer('ios');
