@@ -98,12 +98,73 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 .lb .bw{background:#fef9e7;border-left:3px solid #fbbf24;padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:13px;color:#555;line-height:1.6}
 .lf{background:#f8fafc;padding:12px 24px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#888}
 @media(max-width:480px){.po h1{font-size:24px}.rb .v{font-size:22px}.rx .ra{font-size:26px}.tr button{font-size:12px;padding:10px 6px}}
+
+/* ===== App-style dark theme with bottom tabs ===== */
+body{display:block!important;background:#080c15!important;padding:0 0 96px!important;color:#e5e7eb}
+.wrap{margin:0 auto;padding:0 14px}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 18px) 4px 10px}
+.hd h2{font-family:Georgia,'Times New Roman',serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:.2px}
+.ib{width:46px;height:46px;border-radius:14px;border:1px solid #22304a;background:#0f1626;color:#cbd5e1;font-size:16px;cursor:pointer}
+.ib:active{transform:scale(.94)}
+.rb{background:#0f1626!important;border:1px solid #1c2840;border-radius:14px!important;box-shadow:none!important;padding:10px 16px!important;margin-bottom:16px!important}
+.rb .v{font-size:18px!important;color:#fff!important}
+.rb .l,.rb .m{color:#8ea0bd!important}
+.rb .br{display:none}
+.tab{display:none}.tab.on{display:block;animation:fi .25s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.po,.cw,.lw{border:1px solid #1c2840;border-radius:22px!important;box-shadow:0 12px 40px rgba(0,0,0,.45)!important;margin-bottom:18px!important}
+.cw,.lw{background:#0f1626!important}
+.lh{background:transparent!important;border-bottom:1px solid #1c2840}
+.lb p,.lb .bw{color:#b8c4d8!important}
+.lb .bw{background:rgba(251,191,36,.08)!important}
+.lf{background:#0b1220!important;border-color:#1c2840!important;color:#8ea0bd!important}
+.tr button,.pr button{background:#0b1220!important;border:1px solid #22304a!important;color:#9fb3cf!important;border-radius:14px}
+.pr button{border-radius:20px}
+.tr button.on,.pr button.on{background:linear-gradient(135deg,#1e4d7a,#2563eb)!important;border-color:transparent!important;color:#fff!important}
+.ir .ig{background:#0b1220!important;border:1px solid #22304a!important}
+.ir .ig:focus-within{border-color:#60a5fa!important}
+.ir .ig .sy{color:#8ea0bd!important}
+.cb input[type=number]{color:#fff!important;background:transparent!important}
+.ia .h,.rn{color:#8ea0bd!important}.rn strong{color:#cbd5e1!important}
+.rx{background:#0b1220!important;border:1px solid #22304a!important}
+.rx .rl,.rx .rd,.rx .rk{color:#8ea0bd!important}.rx .rk{border-color:#22304a!important}
+.rx .ra{color:#fbbf24!important}
+.cw .wa{background:linear-gradient(135deg,#1e4d7a,#2563eb)!important;border-radius:14px!important}
+.po{background:#0f1626!important}
+.po .pf{background:#0b1220!important;border-top:1px solid #1c2840}
+.hw,.cg{background:#0f1626!important;border:1px solid #1c2840!important;border-radius:18px!important;margin-bottom:14px}
+.bn{position:fixed;left:0;right:0;bottom:0;z-index:9990;background:#0b1120;border-top:1px solid #1c2840;display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bn .in{display:flex;width:100%;max-width:520px}
+.bn button{flex:1;position:relative;background:none;border:none;color:#7f8ea8;padding:14px 4px 12px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bn button i{font-size:21px}
+.bn button.on{color:#93c5fd}
+.bn button.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#fbbf24,#60a5fa)}
+#whatsapp-fab{bottom:88px!important}#whatsapp-popup{bottom:154px!important}
+.sl2{overflow:hidden;border-radius:14px;margin-bottom:16px}
+.sl2-t{display:flex;transition:transform .5s ease}
+.sl2-s{flex:0 0 100%;min-width:0;display:flex}
+.sl2-s.off{display:none}
+.sl2-s .rb{margin-bottom:0!important;width:100%;min-height:76px}
+.ins-l{display:flex;align-items:center;gap:12px}
+.ins-i{width:40px;height:40px;border-radius:50%;background:rgba(251,191,36,.15);color:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+.ins-t{font-size:15px;font-weight:700;color:#fff;margin-top:2px}
+.ins-b{background:#fbbf24;color:#0b2b4a;border:none;padding:10px 20px;border-radius:20px;font-weight:700;font-size:14px;cursor:pointer}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.dots:empty{display:none}
+.dots i{width:6px;height:6px;border-radius:50%;background:#2a3a58;transition:all .3s}
+.dots i.on{width:18px;background:#fbbf24}
 </style>
 <div class="wrap">
-<div class="rb">
+<header class="hd"><h2 id="ttl">Home</h2><button class="ib" onclick="fr()" aria-label="Refresh rate"><i class="fa-solid fa-rotate"></i></button></header>
+<main>
+<section class="tab on" id="tab-home">
+<div class="sl2" id="rs"><div class="sl2-t" id="rst">
+<div class="sl2-s"><div class="rb">
 <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span class="pd"></span><span class="l" id="sl">Live Rate</span></div><div class="v">1 USD = <span id="d1">—</span> ZMW</div></div>
 <div style="text-align:right"><div class="m" id="m1">Loading...</div><button class="br" onclick="fr()">↻ Refresh</button></div>
-</div>
+</div></div>
+<div class="sl2-s off" id="ins"><div class="rb"><div class="ins-l"><div class="ins-i"><i class="fa-solid fa-download"></i></div><div><div class="l">Get the app</div><div class="ins-t" id="ins-t">Install for quick access</div></div></div><button class="ins-b" id="ins-b" style="display:none">Install</button></div></div>
+</div><div class="dots" id="dots"></div></div>
 <div class="po">
 <div class="pt">
 <div class="fg">
@@ -122,38 +183,24 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 <div class="cd"><div class="a">🕐 Rate Update</div><div class="b" id="p1">🕐 — | 📅 —</div></div>
 <div class="cd"><div class="a">📈 Today's Rate</div><div class="b g" id="p2">1 USD = — ZMW</div></div>
 </div>
-<div class="hw">
-<h3>📲 How To Send Money</h3>
-<div class="tr" style="margin-bottom:14px">
-<button id="hsw" class="on" onclick="hd('zw')">🇿🇼 From Zimbabwe</button>
-<button id="hsa" onclick="hd('za')">🇿🇦 From South Africa</button>
-</div>
-<div id="hsZw">
-<div class="hs"><div class="hn">1</div><div class="hc"><b>Dial the USSD code</b><span>Enter <code>*153*3*1*004148*amount#</code> on EcoCash (Cryptrax Solution) to initiate the transfer.</span></div></div>
-<div class="hs"><div class="hn">2</div><div class="hc"><b>Send proof of payment</b><span>WhatsApp us a screenshot of the transaction showing the sender's name, amount, and Transaction ID.</span></div></div>
-<div class="hs"><div class="hn">3</div><div class="hc"><b>Wait for confirmation</b><span>We verify the transaction and confirm receipt with you before releasing funds.</span></div></div>
-<div class="hs"><div class="hn">4</div><div class="hc"><b>Receive your funds</b><span>Share your MTN or Airtel Mobile Money number, or arrange a cash pickup in Zambia.</span></div></div>
-</div>
-<div id="hsZa" style="display:none">
-<div class="hs"><div class="hn">1</div><div class="hc"><b>Download and register</b><span>Get the Sasai Money Transfer app from the Google Play Store or Apple App Store, and sign up with your mobile number and personal details.</span></div></div>
-<div class="hs"><div class="hn">2</div><div class="hc"><b>Get a quote</b><span>Enter the amount you want to send to see the exchange rate and fees, then tap the send arrow to proceed.</span></div></div>
-<div class="hs"><div class="hn">3</div><div class="hc"><b>Select destination and delivery</b><span>Choose Zimbabwe as the destination, then pick direct deposit to an EcoCash USD wallet or cash pickup at a partner location like BancABC.</span></div></div>
-<div class="hs"><div class="hn">4</div><div class="hc"><b>Add the beneficiary</b><span>Select an existing beneficiary or add a new one with their full name, phone number, and required ID details.</span></div></div>
-<div class="hs"><div class="hn">5</div><div class="hc"><b>Pay and confirm</b><span>Choose EFT or card as your payment method, accept the declarations, and complete the transfer. Save the reference number provided.</span></div></div>
-</div>
-</div>
-<div class="cg">
-<h3>💰 Our Charges (per transaction)</h3>
-<div class="cr"><span>$10 and less</span><span class="e">$1 USD</span></div>
-<div class="cr"><span>$11 to $30</span><span class="e">$2 USD</span></div>
-<div class="cr"><span>$31 to $60</span><span class="e">$3 USD</span></div>
-<div class="cr"><span>$61 and above</span><span class="e">5% charge</span></div>
-</div>
 </div>
 <div class="pf">
 <div class="tg">Fast. Safe. Reliable.</div>
 </div>
 </div>
+<div class="lw">
+<div class="lh"><h3>📄 Terms & Privacy</h3></div>
+<div class="lb">
+<div class="bw"><strong>🔒 No data collection.</strong> This site runs entirely in your browser. We don't track, store, or share your info.</div>
+<p><strong>⚠️ Pop-ups & prompts.</strong> If you see any pop-up asking for personal details — close it. This site has no forms.</p>
+<p><strong>📊 Rates disclaimer.</strong> Rates shown are for reference only. Always confirm with your provider.</p>
+<p><strong>📞 Third-party contact.</strong> WhatsApp number is for the transfer service.</p>
+</div>
+<div class="lf">Last updated — May 2026 &nbsp;·&nbsp; <a href="/admin.html" style="color:#bbb;text-decoration:none;font-size:11px;">⚙ Admin</a></div>
+<div class="lf">Made by 3Mkay_Derado</div>
+</div>
+</section>
+<section class="tab" id="tab-calc">
 <div class="cw">
 <div class="ch"><h2>Transfer Calculator</h2><p>Know exactly what arrives</p></div>
 <div class="cb">
@@ -196,19 +243,48 @@ body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh
 <div class="rn">Rate: <strong>1 USD = <span id="rn1">—</span> ZMW</strong> &nbsp;·&nbsp; <span id="sn">Loading...</span></div>
 </div>
 </div>
-<div class="lw">
-<div class="lh"><h3>📄 Terms & Privacy</h3></div>
-<div class="lb">
-<div class="bw"><strong>🔒 No data collection.</strong> This site runs entirely in your browser. We don't track, store, or share your info.</div>
-<p><strong>⚠️ Pop-ups & prompts.</strong> If you see any pop-up asking for personal details — close it. This site has no forms.</p>
-<p><strong>📊 Rates disclaimer.</strong> Rates shown are for reference only. Always confirm with your provider.</p>
-<p><strong>📞 Third-party contact.</strong> WhatsApp number is for the transfer service.</p>
+<div class="cg" style="margin-bottom:18px">
+<h3>💰 Our Charges (per transaction)</h3>
+<div class="cr"><span>$11 and less</span><span class="e">$1 USD</span></div>
+<div class="cr"><span>$12</span><span class="e">$1.50 USD</span></div>
+<div class="cr"><span>$13 to $30</span><span class="e">$2 USD</span></div>
+<div class="cr"><span>$31 to $60</span><span class="e">$3 USD</span></div>
+<div class="cr"><span>$61 and above</span><span class="e">5% charge</span></div>
 </div>
-<div class="lf">Last updated — May 2026 &nbsp;·&nbsp; <a href="/admin.html" style="color:#bbb;text-decoration:none;font-size:11px;">⚙ Admin</a></div>
-<div class="lf">Made by 3Mkay_Derado</div>
+</section>
+<section class="tab" id="tab-guide">
+<div class="hw">
+<h3>📲 How To Send Money</h3>
+<div class="tr" style="margin-bottom:14px">
+<button id="hsw" class="on" onclick="hd('zw')">🇿🇼 From Zimbabwe</button>
+<button id="hsa" onclick="hd('za')">🇿🇦 From South Africa</button>
 </div>
-</div>`);
+<div id="hsZw">
+<div class="hs"><div class="hn">1</div><div class="hc"><b>Dial the USSD code</b><span>Enter <code>*153*3*1*004148*amount#</code> on EcoCash (Cryptrax Solution) to initiate the transfer.</span></div></div>
+<div class="hs"><div class="hn">2</div><div class="hc"><b>Send proof of payment</b><span>WhatsApp us a screenshot of the transaction showing the sender's name, amount, and Transaction ID.</span></div></div>
+<div class="hs"><div class="hn">3</div><div class="hc"><b>Wait for confirmation</b><span>We verify the transaction and confirm receipt with you before releasing funds.</span></div></div>
+<div class="hs"><div class="hn">4</div><div class="hc"><b>Receive your funds</b><span>Share your MTN or Airtel Mobile Money number, or arrange a cash pickup in Zambia.</span></div></div>
+</div>
+<div id="hsZa" style="display:none">
+<div class="hs"><div class="hn">1</div><div class="hc"><b>Download and register</b><span>Get the Sasai Money Transfer app from the Google Play Store or Apple App Store, and sign up with your mobile number and personal details.</span></div></div>
+<div class="hs"><div class="hn">2</div><div class="hc"><b>Get a quote</b><span>Enter the amount you want to send to see the exchange rate and fees, then tap the send arrow to proceed.</span></div></div>
+<div class="hs"><div class="hn">3</div><div class="hc"><b>Select destination and delivery</b><span>Choose Zimbabwe as the destination, then pick direct deposit to an EcoCash USD wallet or cash pickup at a partner location like BancABC.</span></div></div>
+<div class="hs"><div class="hn">4</div><div class="hc"><b>Add the beneficiary</b><span>Select an existing beneficiary or add a new one with their full name, phone number, and required ID details.</span></div></div>
+<div class="hs"><div class="hn">5</div><div class="hc"><b>Pay and confirm</b><span>Choose EFT or card as your payment method, accept the declarations, and complete the transfer. Save the reference number provided.</span></div></div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<nav class="bn"><div class="in">
+<button class="on" data-t="home" onclick="sw('home')"><i class="fa-solid fa-house"></i>Home</button>
+<button data-t="calc" onclick="sw('calc')"><i class="fa-solid fa-calculator"></i>Calculate</button>
+<button data-t="guide" onclick="sw('guide')"><i class="fa-solid fa-list-check"></i>Guide</button>
+</div></nav>
+`);
 
+var TT={home:'Home',calc:'Calculator',guide:'How it works'};
+function sw(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id==='tab-'+t));document.querySelectorAll('.bn button').forEach(e=>e.classList.toggle('on',e.dataset.t===t));document.getElementById('ttl').textContent=TT[t];window.scrollTo(0,0);}
 var rate = 20;
 let smA = 's', smB = 's';
 

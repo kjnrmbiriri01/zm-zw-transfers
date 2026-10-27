@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zm-zw-transfers-v2';
+const CACHE_NAME = 'zm-zw-transfers-v3';
 const APP_SHELL = [
   './whatsapp-button.js',
   './install-prompt.js',
